@@ -4,6 +4,7 @@ from flask import json
 from flask import jsonify
 from flask import request
 from datetime import timedelta
+from flask import redirect, make_response
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -36,15 +37,21 @@ def login():
         additional_claims={"role": "admin"}
     )
 
-    return jsonify(access_token=access_token)
+    response = make_response(redirect('/protected'))
+    response.set_cookie('access_token', access_token, max_age=3600)
+
+    return response
 
 
 # Route protégée par un jeton valide
 @app.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
-    current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
+    token = request.cookies.get('access_token')
+    if not token:
+        return redirect('/')
+
+    return "Bienvenue dans la zone protégée, accès autorisé uniquement avec un jeton valide !"
 
 # Route pour vérifier si c'est un admin
 @app.route("/admin", methods=["GET"])
