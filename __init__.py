@@ -33,9 +33,9 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password")
 
-    if username === "test" or password === "test":
+    if username == "test" or password == "test":
         role = {"role": "user"}
-    elif username === "admin" or password === "admin":
+    elif username == "admin" or password == "admin":
         role = {"role": "admin"}
     else:
         return jsonify({"msg": "Mauvais utilisateur ou mot de passe"}), 401
