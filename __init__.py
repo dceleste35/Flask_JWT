@@ -33,13 +33,17 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password")
 
-    if username != "test" or password != "test":
+    if username === "test" or password === "test":
+        role = {"role": "user"}
+    elif username === "admin" or password === "admin":
+        role = {"role": "admin"}
+    else:
         return jsonify({"msg": "Mauvais utilisateur ou mot de passe"}), 401
 
     access_token = create_access_token(
         identity=username,
         expires_delta=timedelta(hours=1),
-        additional_claims={"role": "admin"}
+        additional_claims=role
     )
 
     response = make_response(redirect('/protected'))
@@ -54,8 +58,8 @@ def login():
 def protected():
     current_user = get_jwt_identity()
 
-    if current_user != "test":
-        return "Vous n'avez pas accès à cette ressource"
+    if current_user is None:
+        return redirect('/login')
 
     return "Bienvenue dans la zone protégée, accès autorisé uniquement avec un jeton valide !"
 
