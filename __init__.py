@@ -53,6 +53,10 @@ def login():
 @jwt_required()
 def protected():
     current_user = get_jwt_identity()
+
+    if current_user != "test":
+        return "Vous n'avez pas accès à cette ressource"
+
     return "Bienvenue dans la zone protégée, accès autorisé uniquement avec un jeton valide !"
 
 # Route pour vérifier si c'est un admin
