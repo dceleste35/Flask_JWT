@@ -11,6 +11,8 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import get_jwt
+from flask_jwt_extended import set_access_cookies
+
 
 app = Flask(__name__)
 
@@ -41,7 +43,7 @@ def login():
     )
 
     response = make_response(redirect('/protected'))
-    response.set_cookie('access_token', access_token, max_age=3600)
+    set_access_cookies(response, access_token)
 
     return response
 
@@ -50,10 +52,7 @@ def login():
 @app.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
-    token = request.cookies.get('access_token')
-    if not token:
-        return redirect('/login')
-
+    current_user = get_jwt_identity()
     return "Bienvenue dans la zone protégée, accès autorisé uniquement avec un jeton valide !"
 
 # Route pour vérifier si c'est un admin
