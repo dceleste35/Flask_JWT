@@ -49,7 +49,7 @@ def login():
 def protected():
     token = request.cookies.get('access_token')
     if not token:
-        return redirect('/')
+        return redirect('/login')
 
     return "Bienvenue dans la zone protégée, accès autorisé uniquement avec un jeton valide !"
 
