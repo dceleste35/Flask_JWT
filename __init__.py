@@ -8,9 +8,9 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
-                                                                                                                                       
-app = Flask(__name__)                                                                                                                  
-                                                                                                                                       
+
+app = Flask(__name__)
+
 # Configuration du module JWT
 app.config["JWT_SECRET_KEY"] = "Ma_clé_secrete"  # Ma clée privée
 jwt = JWTManager(app)
@@ -28,7 +28,11 @@ def login():
     if username != "test" or password != "test":
         return jsonify({"msg": "Mauvais utilisateur ou mot de passe"}), 401
 
-    access_token = create_access_token(identity=username)
+    access_token = create_access_token(
+        identity=username,
+        expires_delta=timedelta(hours=1)
+    )
+
     return jsonify(access_token=access_token)
 
 
@@ -38,6 +42,6 @@ def login():
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
-                                                                                                               
+
 if __name__ == "__main__":
   app.run(debug=True)
