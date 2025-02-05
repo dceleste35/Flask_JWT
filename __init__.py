@@ -16,6 +16,8 @@ app = Flask(__name__)
 
 # Configuration du module JWT
 app.config["JWT_SECRET_KEY"] = "Ma_clé_secrete"  # Ma clée privée
+app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+
 jwt = JWTManager(app)
 
 @app.route('/')
