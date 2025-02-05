@@ -32,7 +32,7 @@ def login():
     access_token = create_access_token(
         identity=username,
         expires_delta=timedelta(hours=1),
-        aditional_claims={"role": "admin"}
+        additional_claims={"role": "admin"}
     )
 
     return jsonify(access_token=access_token)
