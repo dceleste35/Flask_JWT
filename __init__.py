@@ -47,10 +47,14 @@ def protected():
 
 # Route pour vérifier si c'est un admin
 @app.route("/admin", methods=["GET"])
-@jwt_required(required_claims={"role": "admin"})
+@jwt_required()
 def admin_protected():
+    jwt = get_jwt()
+    if jwt.get("role") != "admin":
+        return jsonify({"msg": "Accès réservé aux administrateurs"}), 403
+
     current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user, role="admin"), 200
+    return jsonify(logged_in_as=current_user), 200
 
 if __name__ == "__main__":
   app.run(debug=True)
